@@ -1,39 +1,37 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {
   View,
   Text,
   StyleSheet,
-  Button
+  Button,
+  TouchableOpacity
 } from 'react-native'
+import CategoryForm from './AddCategoryForm';
 
-export function Header() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>ReciMe</Text>
-      <Text style={styles.text}>+</Text>
-    </View>
-  )
+export class Header extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      text: ''
+    }
+  }
+
+  render () {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>{this.props.text}</Text>
+      </View>
+    )
+  }
+  
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ff009d',
-    height: 100,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'stretch'
+    margin: 20,
   },
   text: {
-    fontSize: 40,
-    marginTop: 30,
-    marginLeft: 20,
-    marginRight: 20,
-    color: '#ffffff'
-  },
-  button: {
-    alignSelf: 'stretch',
-    color: '#ffffff',
-    width: 30,
-    height: 30
+    fontSize: 25,
+    textAlign: 'center',
   }
 })
