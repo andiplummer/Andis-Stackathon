@@ -10,9 +10,6 @@ import { View,
 } from 'react-native'
 import * as firebase from 'firebase'
 import { FirebaseWrapper } from '../firebase/firebase';
-import { throwStatement } from '@babel/types';
-import {Actions} from 'react-native-router-flux'
-
 
 export default class LoginScreen extends Component {
   constructor(props) {
@@ -24,14 +21,19 @@ export default class LoginScreen extends Component {
     this.resetForm = this.resetForm.bind(this);
   }
 
-  async signIn() {
+  async signUp() {
     try {
       await firebase
         .auth()
-        .signInWithEmailAndPassword(this.state.email, this.state.password);
-      console.log("signed in: ", firebase.auth().currentUser.email);
+        .createUserWithEmailAndPassword(this.state.email, this.state.password);
+      const userId = firebase.auth().currentUser.uid;
+      const email = firebase.auth().currentUser.identifier;
+      await FirebaseWrapper.GetInstance().CreateNewDocument(`users`, {
+        id: userId,
+        email: this.state.email
+      });
       this.resetForm();
-      this.props.navigation.navigate('Dashboard')
+      this.props.navigation.navigate('Login')
     } catch (error) {
       console.log(error);
     }
@@ -47,33 +49,33 @@ export default class LoginScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-          <Text style={styles.welcome}>Login</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            textContentType="emailAddress"
-            autoCapitalize="none"
-            onChangeText={text => this.setState({ email: text })}
-            value={this.state.email}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            onChangeText={text => this.setState({ password: text })}
-            value={this.state.password}
-          />
-          <View style={styles.btnContainer}>
-            <TouchableOpacity
-              style={styles.userBtn}
-              onPress={() => this.signIn()}
-            >
-              <Text style={styles.btnText}>Login</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity>
-            <Text style={styles.redirect} onPress={() => this.props.navigation.navigate('Signup')}>Need an account? Sign up here!</Text>
+        <Text style={styles.welcome}>Sign Up</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          textContentType="emailAddress"
+          autoCapitalize="none"
+          onChangeText={text => this.setState({ email: text })}
+          value={this.state.email}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry
+          onChangeText={text => this.setState({ password: text })}
+          value={this.state.password}
+        />
+        <View style={styles.btnContainer}>
+          <TouchableOpacity
+            style={styles.userBtn}
+            onPress={() => this.signUp()}
+          >
+            <Text style={styles.btnText}>Sign Up</Text>
           </TouchableOpacity>
+        </View>
+        <TouchableOpacity>
+          <Text style={styles.redirect} onPress={() => this.props.navigation.navigate('Login')}>Already have an account? Login here!</Text>
+        </TouchableOpacity>
       </View>
     );
   }

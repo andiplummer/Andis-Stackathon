@@ -12,7 +12,7 @@ import {Text,
   from 'react-native'
   import {Header} from './Header'
 
-  export class Recipes extends Component {
+  export class Grocery extends Component {
     render() {
       return (
         <ScrollView style={styles.container}>
@@ -24,5 +24,8 @@ import {Text,
   const styles = StyleSheet.create({
     container: {
    
+    },
+    header: {
+
     }
   })

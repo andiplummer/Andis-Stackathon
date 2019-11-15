@@ -30,30 +30,24 @@ export class Header extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.text}>{this.props.text}</Text>
-        <TouchableOpacity onPress={()=> this.setState({ modalVisible: true })} style={styles.buttonContainer}>
+        {/* <TouchableOpacity onPress={()=> this.setState({ modalVisible: true })} style={styles.buttonContainer}>
           <Icon
             name="md-add-circle-outline"
             size={35}
           />
-        </TouchableOpacity>
-        {
-          this.props.text === 'Categories' ? 
-            <CategoryForm modalVisible={this.state.modalVisible} closeModal={() => this.closeModal()} />
-            : 
-            <RecipeForm modalVisible={this.state.modalVisible} closeModal={() => this.closeModal()} />
-        }
+        </TouchableOpacity> */}
       </View>
     )
   }
-  
 }
 
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginTop: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#dadada',
+    width: '100%',
+    padding: 20,
   },
   text: {
     fontSize: 25,
@@ -61,5 +55,5 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     marginRight: 10,
-  }
+  },
 })

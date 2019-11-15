@@ -14,65 +14,29 @@ import { throwStatement } from '@babel/types';
 import {Actions} from 'react-native-router-flux'
 
 
-export default class LoginScreen extends Component {
+export default class LogoutScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      email: "",
-      password: ""
-    };
-    this.resetForm = this.resetForm.bind(this);
   }
 
-  async signIn() {
-    try {
-      await firebase
-        .auth()
-        .signInWithEmailAndPassword(this.state.email, this.state.password);
-      console.log("signed in: ", firebase.auth().currentUser.email);
-      this.resetForm();
-      this.props.navigation.navigate('Dashboard')
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  resetForm() {
-    this.setState({
-      email: "",
-      password: ""
-    });
+  signOut() {
+    this.props.navigation.navigate('Welcome')
   }
 
   render() {
     return (
       <View style={styles.container}>
-          <Text style={styles.welcome}>Login</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Email"
-            textContentType="emailAddress"
-            autoCapitalize="none"
-            onChangeText={text => this.setState({ email: text })}
-            value={this.state.email}
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            onChangeText={text => this.setState({ password: text })}
-            value={this.state.password}
-          />
+          <Text style={styles.welcome}>Are you sure you'd like to logout?</Text>
           <View style={styles.btnContainer}>
             <TouchableOpacity
               style={styles.userBtn}
-              onPress={() => this.signIn()}
+              onPress={() => this.signOut()}
             >
-              <Text style={styles.btnText}>Login</Text>
+              <Text style={styles.btnText}>Logout</Text>
             </TouchableOpacity>
           </View>
           <TouchableOpacity>
-            <Text style={styles.redirect} onPress={() => this.props.navigation.navigate('Signup')}>Need an account? Sign up here!</Text>
+            <Text style={styles.redirect} onPress={() => this.props.navigation.navigate('Recipes')}>Keep me logged in!</Text>
           </TouchableOpacity>
       </View>
     );

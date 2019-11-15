@@ -14,7 +14,8 @@ import CategoryForm from './AddCategoryForm'
 import CategoryCard from './CategoryCard'
 import { FirebaseWrapper } from '../firebase/firebase';
 
-export class Categories extends Component {
+
+export default class Categories extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -31,11 +32,12 @@ export class Categories extends Component {
   render () {
     return (
       <ScrollView style={styles.container}>
-        {
+        <Text>RECIPES!!!</Text>
+        {/* {
           this.state.categories.map(category => {
             return <CategoryCard navigation={this.props.navigation} category={category} key={category.id} />
           })
-        }
+        } */}
       </ScrollView>
     )
   }
