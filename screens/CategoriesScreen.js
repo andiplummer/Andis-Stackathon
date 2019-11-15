@@ -17,10 +17,9 @@ import {Categories} from '../components/Categories'
 import {Header} from '../components/Header'
 
 export default class HomeScreen extends React.Component{
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
-      posts: []
     }
   }
 
@@ -28,24 +27,7 @@ export default class HomeScreen extends React.Component{
     return (
       <View style={styles.container}>
         <Header text='Categories' />
-        <View style={styles.buttonContainer}>
-          <View style={styles.button}>
-            <Button 
-              title="Categories"
-            />
-          </View>
-          <View style={styles.button}>
-            <Button
-              title="Recipes"
-            />
-          </View>
-          <View style={styles.button}>
-            <Button 
-              title="Favorites"
-            />
-          </View>
-        </View>
-        <Categories />
+        <Categories navigation={this.props.navigation} />
       </View>
     )
   }

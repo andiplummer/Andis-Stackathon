@@ -5,33 +5,38 @@ import {Text,
   ScrollView, 
   Modal, 
   TextInput, 
+  Image,
   TouchableHighlight, 
   SafeAreaView, 
   TouchableOpacity} 
   from 'react-native'
 import CategoryForm from './AddCategoryForm'
+import CategoryCard from './CategoryCard'
+import { FirebaseWrapper } from '../firebase/firebase';
 
 export class Categories extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      modalVisible: false,
       categories: []
     }
   }
 
-  closeModal() {
-    this.setState({ modalVisible: !this.state.modalVisible })
+  async componentDidMount() {
+    await FirebaseWrapper.GetInstance().SetupCollectionListener('categories', (categories) => {
+      this.setState({ categories })
+    })
   }
 
   render () {
     return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={()=> this.setState({ modalVisible: true })} style={styles.buttonContainer}>
-          <Text style={styles.addBtn}>New Category</Text>
-        </TouchableOpacity>
-        <CategoryForm modalVisible={this.state.modalVisible} closeModal={() => this.closeModal()} />
-      </View>
+      <ScrollView style={styles.container}>
+        {
+          this.state.categories.map(category => {
+            return <CategoryCard navigation={this.props.navigation} category={category} key={category.id} />
+          })
+        }
+      </ScrollView>
     )
   }
   

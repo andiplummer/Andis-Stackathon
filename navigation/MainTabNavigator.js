@@ -3,9 +3,9 @@ import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
 import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import RecipesScreen from '../screens/RecipesScreen';
+import LoginScreen from '../screens/LoginScreen';
+import CategoriesScreen from '../screens/CategoriesScreen'
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -14,20 +14,18 @@ const config = Platform.select({
 
 const HomeStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Cuisines: CategoriesScreen,
   },
   config
 );
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Categories',
+  tabBarLabel: 'Cuisines',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
       name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+        Platform.OS === 'ios' ? 'ios-folder' : 'md-home'
       }
     />
   ),
@@ -35,44 +33,46 @@ HomeStack.navigationOptions = {
 
 HomeStack.path = '';
 
-const LinksStack = createStackNavigator(
+const RecipesStack = createStackNavigator(
   {
-    Links: LinksScreen,
+    Recipes: RecipesScreen,
   },
   config
 );
 
-LinksStack.navigationOptions = {
+RecipesStack.navigationOptions = {
   tabBarLabel: 'Recipes',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-list'} />
   ),
 };
 
-LinksStack.path = '';
+RecipesStack.path = '';
 
-const SettingsStack = createStackNavigator(
+const LoginStack = createStackNavigator(
   {
-    Settings: SettingsScreen,
+    Login: LoginScreen,
   },
   config
 );
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Grocery',
+
+LoginStack.navigationOptions = {
+  tabBarLabel: 'Login',
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-list' : 'md-options'} />
+    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-person' : 'md-person'} />
   ),
 };
 
-SettingsStack.path = '';
+LoginStack.path = '';
+
 
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
-  LinksStack,
-  SettingsStack,
+  RecipesStack,
+  LoginStack,
 });
 
 tabNavigator.path = '';
 
-export default tabNavigator;
+export default tabNavigator
