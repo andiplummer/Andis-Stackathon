@@ -14,7 +14,7 @@ import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen'
 import Categories from './components/Categories';
 import {Grocery} from './components/Grocery'
-import {AddRecipe} from './components/AddRecipe'
+import {Add} from './components/Add'
 import {Recipes} from './components/Recipes'
 import LogoutScreen from './screens/LogoutScreen';
 
@@ -30,7 +30,7 @@ export default class App extends Component {
 
 const DashboardTabNavigator = createBottomTabNavigator({
   Recipes,
-  AddRecipe,
+  Add,
   Grocery,
 }, {
   navigationOptions: ({ navigation }) => {
