@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
     width: '90%',
     display: 'flex',
     marginBottom: 20,
+    borderRadius: 7,
   },
   btnText: {
     fontSize: 18,

@@ -14,54 +14,53 @@ import {Text,
   import {Header} from './Header'
   // import * as ImagePicker from 'react-native-image-picker'
   import * as ImagePicker from 'expo-image-picker'
+  import Constants from 'expo-constants';
+  import * as Permissions from 'expo-permissions';
+
 
   const options = {
-    title: 'Add a new recipe',
-    takePhotoButtonTitle: 'Take photo',
-    chooseFromLibraryButtonTitle: 'Choose photo from library'
+    mediaTypes: 'Images',
+    base64: true,
+    quality: 1,
   }
 
   export class Add extends Component {
     constructor(props) {
       super(props) 
         this.state = {
-          avatarSource: null
+          image: null,
         }
     }
 
-    selectImage() {
-      // alert('clicked')
-      ImagePicker.showImagePicker(options, (response) => {
-        console.log('Response = ', response);
-      
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.error) {
-          console.log('ImagePicker Error: ', response.error);
-        } else if (response.customButton) {
-          console.log('User tapped custom button: ', response.customButton);
-        } else {
-          const source = { uri: response.uri };
-      
-          // You can also display the image using data:
-          // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-      
-          this.setState({
-            avatarSource: source,
-          });
+    async getPermissionCameraRoll() {
+      if (Constants.platform.ios) {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+        if (status !== 'granted') {
+          alert('Please enable camera roll access to upload photos')
         }
-      });
+      }
+    }
+
+    selectImage() {
+      this.getPermissionCameraRoll()
+      ImagePicker.launchImageLibraryAsync(options)
     }
 
     render() {
       return (
         <View style={styles.container}>
-          <Text>Add a recipe</Text>
-          <TouchableOpacity
-            onPress={this.selectImage}
+          <TouchableOpacity 
+            style={styles.addBtn}
+            // on Press render drawer nav from bottom to select from camera roll, manual, or take pic
+            onPress={()=> this.setState({ modalVisible: true })}
           >
-            <Text>Select Image</Text>
+            <Text style={styles.addText}>Add a recipe</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.selectImage()}
+          >
+          </TouchableOpacity>
+      
         </View>
       )
     }
@@ -70,6 +69,22 @@ import {Text,
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      flexDirection: 'row'
+      flexDirection: 'column',
+      alignItems: 'center',
+    }, 
+    addBtn: {
+      width: '50%',
+      backgroundColor: '#e0feff',
+      height: 50,
+      marginTop: 40,
+      borderRadius: 7,
+    }, 
+    addText: {
+      textAlign: 'center',
+      fontSize: 20,
+      padding: 15,
+    },
+    modal: {
+      height: 300,
     }
   })

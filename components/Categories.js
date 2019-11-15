@@ -15,7 +15,7 @@ import CategoryCard from './CategoryCard'
 import { FirebaseWrapper } from '../firebase/firebase';
 
 
-export default class Categories extends Component {
+export class Categories extends Component {
   constructor(props) {
     super(props)
     this.state = {

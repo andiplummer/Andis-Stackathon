@@ -72,7 +72,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     padding: 15,
     width: "90%",
-    display: "flex"
+    display: "flex",
+    borderRadius: 7,
   },
   btnText: {
     fontSize: 18,

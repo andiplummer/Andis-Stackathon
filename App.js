@@ -14,9 +14,11 @@ import LoginScreen from './screens/LoginScreen';
 import SignUpScreen from './screens/SignUpScreen'
 import Categories from './components/Categories';
 import {Grocery} from './components/Grocery'
-import {Add} from './components/Add'
 import {Recipes} from './components/Recipes'
 import LogoutScreen from './screens/LogoutScreen';
+import {AddButton} from './components/AddButton';
+import {FontAwesome5} from '@expo/vector-icons'
+import {RecipeScreen, GroceryScreen, FavoriteScreen, ProfileScreen} from './screens/index'
 
 export default class App extends Component {
   render() {
@@ -28,11 +30,42 @@ export default class App extends Component {
 }
 
 
-const DashboardTabNavigator = createBottomTabNavigator({
-  Recipes,
-  Add,
-  Grocery,
+const DashboardTabNavigator = createBottomTabNavigator(
+  {
+    Recipes : { 
+      screen: RecipeScreen,
+      navigationOptions: {
+        tabBarIcon: () => <FontAwesome5 name="home" size={24} />
+      } 
+  },
+  Favorites: { 
+    screen: FavoriteScreen,
+    navigationOptions: {
+      tabBarIcon: () => <FontAwesome5 name="home" size={24} />
+    }
+  },
+  Add: { 
+    screen: () => null,
+    navigationOptions: {
+      tabBarIcon: <AddButton />
+    }
+  },
+  Grocery: { 
+    screen: GroceryScreen,
+    navigationOptions: {
+      tabBarIcon: () => <FontAwesome5 name="home" size={24} />
+    }
+  },
+  Profile: { 
+    screen: ProfileScreen,
+    navigationOptions: {
+      tabBarIcon: () => <FontAwesome5 name="home" size={24} />
+    }
+  }
 }, {
+  tabBarOptions: {
+    showLabel: false
+  },
   navigationOptions: ({ navigation }) => {
     const {routeName} = navigation.state.routes[navigation.state.index]
     return {
@@ -40,6 +73,7 @@ const DashboardTabNavigator = createBottomTabNavigator({
     }
   }
 })
+
 
 const DashboardStackNavigator = createStackNavigator({
   DashboardTabNavigator: DashboardTabNavigator
@@ -58,7 +92,7 @@ const DashboardStackNavigator = createStackNavigator({
 })
 
 const AppDrawerNavigator = createDrawerNavigator({
-  Home: { screen: DashboardStackNavigator },
+  Back: { screen: DashboardStackNavigator },
   Logout: { screen: LogoutScreen } 
 }, {
   drawerPosition: 'right'
