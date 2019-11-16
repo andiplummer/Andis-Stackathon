@@ -16,7 +16,7 @@ export class AddButton extends React.Component {
     Animated.sequence([
       Animated.timing(this.buttonSize, {
         toValue: 0.95,
-        duration: 100
+        duration: 50
       }),
       Animated.timing(this.buttonSize, {
         toValue: 1
@@ -71,23 +71,23 @@ export class AddButton extends React.Component {
       <View style={{position: 'absolute', alignItems: 'center'}}>
         <Animated.View style={{position: 'absolute', left: thermometerX, top: thermometerY }}>
           <View style={styles.secondaryButton}>
-            <Feather name='thermometer' size={24} color='#e0feff' />
+            <Feather name='camera' size={24} color='black' />
           </View>
         </Animated.View>
         <Animated.View style={{position: 'absolute', left: timeX, top: timeY }}>
           <View style={styles.secondaryButton}>
-            <Feather name='clock' size={24} color='#e0feff' />
+            <Feather name='upload' size={24} color='black' />
           </View>
         </Animated.View>
         <Animated.View style={{position: 'absolute', left: activityX, top: activityY }}>
           <View style={styles.secondaryButton}>
-            <Feather name='activity' size={24} color='#e0feff' />
+            <Feather name='edit' size={24} color='black' />
           </View>
         </Animated.View>
         <Animated.View style={[styles.button, sizeStyle]} >
-          <TouchableHighlight underlayColor="#e0feff" onPress={this.handlePress}>
+          <TouchableHighlight style={{width: 120, height: 100, alignItems: 'center', justifyContent: 'center'}} underlayColor="transparent" onPress={this.handlePress}>
               <Animated.View style={{ transform: [{ rotate: rotation }] }} >
-                <FontAwesome5 name="plus" size={24} color="#ffffff" />
+                <FontAwesome5 stylle={styles.plus} name="plus" size={30} color="#ffffff" />
               </Animated.View>
           </TouchableHighlight>
         </Animated.View>
@@ -101,11 +101,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0feff',
     alignItems: 'center',
     justifyContent: 'center',
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     position: 'absolute',
-    top: -60,
+    top: -75,
+    zIndex: 3,
     shadowColor: '#7dd1e3',
     shadowRadius: 5,
     shadowOffset: { height: 10 },
@@ -117,9 +118,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center', 
     justifyContent: 'center',
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 55,
+    height: 55,
+    borderRadius: 30,
     backgroundColor: '#e0feff'
+  },
+  plus: {
+    position: 'absolute'
   }
 })

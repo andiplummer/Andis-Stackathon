@@ -18,9 +18,11 @@ import {Recipes} from './components/Recipes'
 import LogoutScreen from './screens/LogoutScreen';
 import {AddButton} from './components/AddButton';
 import {FontAwesome5} from '@expo/vector-icons'
+
 import {RecipeScreen, GroceryScreen, FavoriteScreen, ProfileScreen} from './screens/index'
 
 export default class App extends Component {
+  
   render() {
     FirebaseWrapper.GetInstance().Initialize(firebaseConfig)
     return (
@@ -35,36 +37,37 @@ const DashboardTabNavigator = createBottomTabNavigator(
     Recipes : { 
       screen: RecipeScreen,
       navigationOptions: {
-        tabBarIcon: () => <FontAwesome5 name="home" size={24} />
+        tabBarIcon: () => <FontAwesome5 name="home" size={30} />
       } 
   },
   Favorites: { 
     screen: FavoriteScreen,
     navigationOptions: {
-      tabBarIcon: () => <FontAwesome5 name="home" size={24} />
+      tabBarIcon: () => <FontAwesome5 name="heart" size={30} color="black"/>
     }
   },
   Add: { 
     screen: () => null,
     navigationOptions: {
-      tabBarIcon: <AddButton />
+      tabBarIcon: <AddButton />,
     }
   },
   Grocery: { 
     screen: GroceryScreen,
     navigationOptions: {
-      tabBarIcon: () => <FontAwesome5 name="home" size={24} />
+      tabBarIcon: () => <FontAwesome5 name="list" size={30} />
     }
   },
   Profile: { 
     screen: ProfileScreen,
     navigationOptions: {
-      tabBarIcon: () => <FontAwesome5 name="home" size={24} />
+      tabBarIcon: () => <Icon name="ios-person" size={30} />
+    
     }
   }
 }, {
   tabBarOptions: {
-    showLabel: false
+    showLabel: false,
   },
   navigationOptions: ({ navigation }) => {
     const {routeName} = navigation.state.routes[navigation.state.index]
