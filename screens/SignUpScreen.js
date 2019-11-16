@@ -73,8 +73,8 @@ export default class LoginScreen extends Component {
             <Text style={styles.btnText}>Sign Up</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity>
-          <Text style={styles.redirect} onPress={() => this.props.navigation.navigate('Login')}>Already have an account? Login here!</Text>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+          <Text style={styles.redirect}>Already have an account? Login here!</Text>
         </TouchableOpacity>
       </View>
     );
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#e0feff"
+    backgroundColor: "#c9f9ff"
   },
   welcome: {
     textAlign: "center",
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   input: {
-    width: "90%",
+    width: "75%",
     padding: 15,
     marginBottom: 10,
     backgroundColor: "#ffffff"
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   userBtn: {
     backgroundColor: "#ffffff",
     padding: 15,
-    width: "90%",
+    width: "75%",
     display: "flex",
     borderRadius: 7,
   },
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   redirect: {
-    marginTop: 10,
+    marginTop: 20,
+    fontSize: 16
   }
 });

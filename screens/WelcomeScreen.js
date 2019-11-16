@@ -3,6 +3,7 @@ import {
   View,
   Text,
   Button,
+  Image,
   StyleSheet,
   TouchableOpacity,
   StatusBar
@@ -13,7 +14,6 @@ export default class WelcomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Text style={styles.header}>ReciMe</Text>
-        <Text style={styles.subHeading}>Login or create an account to get started</Text>
         <View style={styles.btnContainer}>
         <TouchableOpacity 
           style={styles.userBtn}
@@ -30,7 +30,9 @@ export default class WelcomeScreen extends React.Component {
           <Text style={styles.btnText}>Sign Up</Text>
         </TouchableOpacity>
        </View>
-       <Text onPress={() => this.props.navigation.navigate('Dashboard')}>Continue as guest</Text>
+       <TouchableOpacity>
+        <Text style={{fontSize: 16}} onPress={() => this.props.navigation.navigate('Dashboard')}>Continue as guest</Text>
+       </TouchableOpacity>
       </View>
     )
   }
@@ -43,12 +45,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#e0feff'
+    backgroundColor: '#c9f9ff'
   },
   header: {
     textAlign: 'center',
     fontSize: 50,
-    marginBottom: 20,
+    marginBottom: 40,
   },
   subHeading: {
     textAlign: 'center',
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
   userBtn: {
     backgroundColor: '#ffffff',
     padding: 15,
-    width: '90%',
+    width: '75%',
     display: 'flex',
     marginBottom: 20,
     borderRadius: 7,

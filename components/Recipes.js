@@ -23,6 +23,6 @@ import {Text,
 
   const styles = StyleSheet.create({
     container: {
-   
+      backgroundColor: '#e6fcff'
     }
   })

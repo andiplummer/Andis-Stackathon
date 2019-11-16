@@ -6,6 +6,7 @@ import { View,
   TextInput,
   Button,
   TouchableOpacity,
+  TouchableHighlight,
   StatusBar
 } from 'react-native'
 import * as firebase from 'firebase'
@@ -35,8 +36,8 @@ export default class LogoutScreen extends Component {
               <Text style={styles.btnText}>Logout</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity>
-            <Text style={styles.redirect} onPress={() => this.props.navigation.navigate('Recipes')}>Keep me logged in!</Text>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Recipes')}>
+            <Text style={styles.redirect}>Stay logged in</Text>
           </TouchableOpacity>
       </View>
     );
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#e0feff"
+    backgroundColor: "#c9f9ff"
   },
   welcome: {
     textAlign: "center",
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   input: {
-    width: "90%",
+    width: "50%",
     padding: 15,
     marginBottom: 10,
     backgroundColor: "#ffffff"
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
   userBtn: {
     backgroundColor: "#ffffff",
     padding: 15,
-    width: "90%",
+    width: "75%",
     display: "flex",
     borderRadius: 7,
   },
@@ -80,6 +81,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   redirect: {
-    marginTop: 10,
+    marginTop: 20,
+    fontSize: 16
   }
 });
