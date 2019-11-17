@@ -59,7 +59,7 @@ export class Recipes extends Component {
         <ScrollView style={styles.container}>
           <Text style={styles.welcome}>My Recipes</Text>
           <View style={styles.recipeNameContainer}>
-            { this.state.recipes.map((recipe, index) => <RecipeCard key={index} recipe={recipe} />) }
+            {/* { this.state.recipes.map((recipe, index) => <RecipeCard key={index} recipe={recipe} />) } */}
           </View>
         </ScrollView>
         : 

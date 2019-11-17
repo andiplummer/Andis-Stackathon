@@ -1,79 +1,84 @@
-import React from 'react'
+import React from "react";
 import {
   View,
   Text,
   Image,
   StyleSheet,
   TouchableHighlight,
-  TouchableOpacity,
-} from 'react-native'
-import {SingleRecipe} from './SingleRecipe'
-import {FontAwesome5, Feather, Ionicons} from '@expo/vector-icons'
-import {withNavigation} from 'react-navigation'
+  TouchableOpacity
+} from "react-native";
+import { SingleRecipe } from "./SingleRecipe";
+import { FontAwesome5, Feather, Ionicons } from "@expo/vector-icons";
+import { withNavigation } from "react-navigation";
 
 class RecipeCard extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       favorite: false,
-      color: 'black'
-    }
-    this.handleFavorite = this.handleFavorite.bind(this)
+      color: "black"
+    };
+    this.handleFavorite = this.handleFavorite.bind(this);
   }
 
   handleFavorite() {
-    console.log('CLicked!!')
+    console.log("CLicked!!");
     if (this.state.favorite === false) {
-      this.setState=({
-      favorite: false,
-      color: 'black' 
-      }) 
+      this.setState = {
+        favorite: false,
+        color: "black"
+      };
     } else {
-      this.setState=({
+      this.setState = {
         favorite: true,
-        color: 'red' 
-      }) 
+        color: "red"
+      };
     }
-    console.log(this.state)
+    console.log(this.state);
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity>
-          <Text style={styles.text} onPress={() => {
-            console.log('clicked!!')
-            this.props.navigation.navigate('Recipe', {
+        <TouchableOpacity
+          onPress={() => {
+            this.props.navigation.navigate("Recipe", {
               recipe: this.props.recipe
-            })}} 
-          >{this.props.recipe.name}</Text>
+            });
+          }}
+        >
+          <Text style={styles.text}>{this.props.recipe.name}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => this.handleFavorite} >
-          <Feather name="heart" size={25} color={this.props.recipe.favorite ? 'red' : 'black'} />
+        <TouchableOpacity onPress={() => this.handleFavorite}>
+          <Feather
+            name="heart"
+            size={25}
+            color={this.props.recipe.favorite ? "red" : "black"}
+          />
         </TouchableOpacity>
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     margin: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     padding: 15,
-    width: '80%',
-    alignSelf: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
+    width: "80%",
+    alignSelf: "center",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   text: {
-    fontSize: 18,
+    fontSize: 18
   },
   image: {
     width: 150,
-    height: 150,
+    height: 150
   }
-})
+});
 
-export default withNavigation(RecipeCard)
+export default withNavigation(RecipeCard);

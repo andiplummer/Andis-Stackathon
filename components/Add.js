@@ -20,21 +20,19 @@ import {Text,
   import Constants from 'expo-constants';
   import * as Permissions from 'expo-permissions';
   import * as firebase from 'firebase'
-  import {FontAwesome5, Feather} from '@expo/vector-icons'
-import { FirebaseWrapper } from '../firebase/firebase';
-import {RecipeForm} from './AddRecipeForm'
-
+  import {FontAwesome5, Feather, AntDesign} from '@expo/vector-icons'
+  import { FirebaseWrapper } from '../firebase/firebase';
+  import {RecipeForm} from './AddRecipeForm'
 
   export class Add extends Component {
     constructor(props) {
       super(props) 
         this.state = {
-          recipeName: '',
-          image: null,
-          favorite: false,
-          modalVisible: false
+          name: '',
+          images: [],
+          modalVisible: false,
         }
-        this.uploadImageToFirebase = this.uploadImageToFirebase.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     closeModal() {
@@ -63,10 +61,16 @@ import {RecipeForm} from './AddRecipeForm'
       await this.getPermissionCameraRoll()
       const image = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: 'Images',
+        quality: 1,
         base64: true,
+        allowsMultipleSelection: true,
       })
+      const savedImg = {
+        url: image.uri,
+        favorite: false
+      }
       this.setState({
-        image: image.uri
+        images: [...this.state.images, savedImg]
       })
     }
 
@@ -76,51 +80,55 @@ import {RecipeForm} from './AddRecipeForm'
       const image = await ImagePicker.launchCameraAsync({
         mediaTypes: 'Images',
         quality: 1,
-        base64: true
+        base64: true,
+        allowsMultipleSelection: true,
       })
+      const savedImg = {
+        url: image.uri,
+        favorite: false
+      }
       this.setState({
-        image: image.uri
+        images: [...this.state.images, savedImg]
       })
     }
 
-    async uploadImageToFirebase(uri, recipeName) {
-
-      if (!uri && !recipeName) {
+    async handleSubmit() {
+      const userId = firebase.auth().currentUser.uid
+      const recipeName = this.state.name
+      if (!this.state.images) {
         Alert.alert('Missing Photo', 'Please take or upload a photo of the recipe you would like to add')
       } else {
-        const blob = await new Promise((resolve, reject) => {
+        this.state.images.forEach(async (image, index) => {
+          // Adding images to firebase storage
+          const blob = await new Promise( async (resolve, reject) => {
           const xhr = new XMLHttpRequest();
           xhr.onload = () => {
-              resolve(xhr.response);
+            resolve(xhr.response);
           };
           xhr.responseType = 'blob';
-          xhr.open('GET', uri, true);
+          xhr.open('GET', image.url, true);
           xhr.send(null);
-      });
-  
-      const userId = firebase.auth().currentUser.uid
-  
-      const ref = firebase
-          .storage()
-          .ref()
-          .child(`userImages/${userId}/${recipeName}`);
-        
-      let snapshot = await ref.put(blob);
-      const downloadUrl = await snapshot.ref.getDownloadURL();
-      recipeName = this.state.recipeName
-      await firebase.database().ref(`/users/${userId}/recipes`).push({
-        recipe: {
-          name: recipeName,
-          url: downloadUrl,
-          favorite: false
+          })
+          const ref = await firebase
+            .storage()
+            .ref()
+            .child(`users/${userId}/${recipeName}/recipeImages/${index}`);
+          let snapshot = await ref.put(blob);
+          const downloadUrl = await snapshot.ref.getDownloadURL();
+          
+          // Adding images to database as download url 
+          await firebase.database().ref(`/users/${userId}/recipes/${recipeName}`).push({
+            url: downloadUrl,
+            favorite: image.favorite
+          })
+        })
+        this.setState({
+          name: '',
+          images: []
+        })
         }
-      })
-      this.setState({
-        recipeName: ''
-      })
-      Alert.alert('Recipe added!', 'View on Recipes page')
+      Alert.alert('Success!', 'Recipe added :)')
     }
-  };
 
     render() {
       return (
@@ -128,13 +136,13 @@ import {RecipeForm} from './AddRecipeForm'
         <View style={styles.container}>
           <Text style={styles.addText }>Add a new recipe</Text>
           <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
-            <TextInput placeholder="Recipe name" style={styles.input} value={this.state.recipeName} onChangeText={(text) => this.setState({ recipeName: text })} />
+            <TextInput placeholder="Recipe name" style={styles.input} value={this.state.name} onChangeText={(text) => this.setState({ name: text })} />
           </TouchableWithoutFeedback>
           <View style={styles.icons}>
-            <TouchableOpacity onPress={() => this.state.recipeName ? this.selectImage() : alert('Please enter a recipe name before uploading a photo')}>
+            <TouchableOpacity onPress={() => this.state.name ? this.selectImage() : alert('Please enter a recipe name before uploading a photo')}>
               <Feather name="upload" color="black" size={80} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.state.recipeName ? this.takePicture() : alert('Please enter a recipe name before taking a photo')}>
+            <TouchableOpacity onPress={() => this.state.name ? this.takePicture() : alert('Please enter a recipe name before taking a photo')}>
               <Feather name="camera" color="black" size={80} />
             </TouchableOpacity>
             <TouchableOpacity onPress={()=> this.setState({ modalVisible: true })}>
@@ -144,11 +152,20 @@ import {RecipeForm} from './AddRecipeForm'
           <View style={styles.btnContainer}>
             <TouchableOpacity
               style={styles.userBtn}
-              onPress={() => this.uploadImageToFirebase(this.state.image, this.state.recipeName)}
+              onPress={() => this.handleSubmit()}
             >
               <Text style={styles.btnText}>Add Recipe</Text>
             </TouchableOpacity>
           </View>
+            { this.state.images ?
+              this.state.images.map((image, index) => {
+                // <View>
+                //   <Text style={styles.imageContainer}>Selected Images</Text>
+                  <Image source={{ uri: image.url }} /> 
+                  {/* <AntDesign name="delete" size={24} onPress={() => this.removePhoto(index)} /> */}
+                // </View>
+            }) : null
+          }
           <RecipeForm modalVisible={this.state.modalVisible} closeModal={() => this.closeModal()} />
         </View>
         </ScrollView>
@@ -185,9 +202,13 @@ import {RecipeForm} from './AddRecipeForm'
       marginTop: 40,
       marginBottom: 40,
     },
+    imageContainer: {
+      marginTop: 30,
+    },
     img: {
-      width: 200,
-      height: 200,
+      width: 300,
+      height: 300,
+      marginTop: 30,
     },
     btnContainer: {
       display: "flex",

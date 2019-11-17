@@ -82,7 +82,7 @@ const DashboardTabNavigator = createBottomTabNavigator(
     Add: {
       screen: AddScreen,
       navigationOptions: {
-        // tabBarIcon: <AddButton />
+        // tabBarIcon: () => <AddButton />
         tabBarIcon: () => <FontAwesome5 name="plus" size={30} color="black" />
       }
     },

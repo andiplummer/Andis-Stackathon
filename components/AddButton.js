@@ -65,6 +65,8 @@ export class AddButton extends React.Component {
     const image = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'Images',
       base64: true,
+      allowsEditing: true,
+      allowsMultipleSelection: true,
     })
     this.uploadImageToFirebase(image.uri)
   }
@@ -75,7 +77,9 @@ export class AddButton extends React.Component {
     const image = await ImagePicker.launchCameraAsync({
       mediaTypes: 'Images',
       quality: 1,
-      base64: true
+      base64: true,
+      allowsEditing: true,
+      allowsMultipleSelection: true,
     })
     this.uploadImageToFirebase(image.uri)
   }
@@ -106,44 +110,44 @@ export class AddButton extends React.Component {
 
 
   render() {
-    // const sizeStyle = {
-    //   transform: [{ scale: this.buttonSize }]
-    // }
+    const sizeStyle = {
+      transform: [{ scale: this.buttonSize }]
+    }
 
-    // const rotation = this.mode.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: ['0deg', '45deg']
-    // })
+    const rotation = this.mode.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '45deg']
+    })
 
-    // const thermometerX = this.mode.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [-24, -100]
-    // })
+    const thermometerX = this.mode.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-24, -100]
+    })
 
-    // const thermometerY = this.mode.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [-50, -100]
-    // })
+    const thermometerY = this.mode.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-50, -100]
+    })
 
-    // const timeX = this.mode.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [-24, -24]
-    // })
+    const timeX = this.mode.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-24, -24]
+    })
 
-    // const timeY = this.mode.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [-50, -150]
-    // })
+    const timeY = this.mode.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-50, -150]
+    })
 
-    // const activityX = this.mode.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [-24, 50]
-    // })
+    const activityX = this.mode.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-24, 50]
+    })
 
-    // const activityY = this.mode.interpolate({
-    //   inputRange: [0, 1],
-    //   outputRange: [-50, -100]
-    // })
+    const activityY = this.mode.interpolate({
+      inputRange: [0, 1],
+      outputRange: [-50, -100]
+    })
 
     return (
       <View style={{position: 'absolute', alignItems: 'center'}}>
@@ -161,8 +165,8 @@ export class AddButton extends React.Component {
           <TouchableHighlight style={styles.secondaryButton} underlayColor="transparent" >
             <Feather name='edit' size={24} color='black' />
           </TouchableHighlight>
-        </Animated.View>         */}
-        {/* <Animated.View style={[styles.button, sizeStyle]} >
+        </Animated.View>        
+        <Animated.View style={[styles.button, sizeStyle]} >
           <TouchableHighlight style={{ alignItems: 'center', justifyContent: 'center'}} underlayColor="transparent">
               <Animated.View style={{ transform: [{ rotate: rotation }] }} >
                 <FontAwesome5 stylle={styles.plus} name="plus" size={30} color="#ffffff" />
