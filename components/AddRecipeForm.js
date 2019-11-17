@@ -1,177 +1,219 @@
-import React, { Component } from 'react'
-import { View, 
-  StyleSheet, 
-  Text, 
-  Button, 
-  Modal, 
+import React, { Component } from "react";
+import {
+  View,
+  StyleSheet,
+  Text,
+  Button,
+  Alert,
+  Modal,
   TouchableHighlight,
+  TouchableWithoutFeedback,
+  Keyboard,
   TouchableOpacity
- } from 'react-native'
-import { TextInput } from 'react-native-gesture-handler';
-import { FirebaseWrapper } from '../firebase/firebase';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { throwStatement } from '@babel/types';
+} from "react-native";
+import { TextInput, ScrollView } from "react-native-gesture-handler";
+import { FirebaseWrapper } from "../firebase/firebase";
+import Icon from "react-native-vector-icons/Ionicons";
+import { FontAwesome5, Feather } from "@expo/vector-icons";
+import * as firebase from 'firebase'
 
-export default class RecipeForm extends Component {
+export class RecipeForm extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-      name: '',
-      image: '',
-      ingredients: [],
-      directions: [],
-      calories: 0,
-      tags: [],
+      name: "",
+      imageUrl: "",
+      ingredients: null,
+      directions: "",
+      calories: "",
       favorite: false,
-      servingSize: 0,
-    }
+      servingSize: ""
+    };
   }
-  
 
   async addRecipe() {
-    // make call to firebase
-    await FirebaseWrapper.GetInstance().CreateNewDocument('recipes', {
-      name: this.state.name,
-      image: this.state.image,
-      ingreients: this.state.ingredients,
-      directions: this.state.directions,
-      calories: this.state.calories,
-      tags: this.state.tags,
-      favorite: this.state.favorite,
-      servingSize: this.state.servingSize
-    })
-    this.setState({
-      name: '',
-      image: '',
-      ingredients: [],
-      directions: [],
-      calories: 0,
-      tags: [],
-      favorite: false,
-      servingSize: 0,
-    })
-    this.props.closeModal()
+    if (this.state.name && this.state.ingredients) {
+      const userId = firebase.auth().currentUser.uid
+      await firebase.database().ref(`/users/${userId}/recipes`).push({
+        [this.state.name]: {
+          imageUrl: this.state.imageUrl,
+          ingredients: this.state.ingredients,
+          directions: this.state.directions,
+          calories: this.state.calories,
+          favorite: this.state.favorite,
+          servingSize: this.state.servingSize
+        }
+      })
+      this.setState({
+        name: "",
+        imageUrl: "",
+        ingredients: "",
+        directions: "",
+        calories: "",
+        favorite: false,
+        servingSize: "",
+        imageUrl: "",
+      })
+      Alert.alert('Recipe added!', 'View on Recipes page')
+    } else {
+      Alert.alert('Oops!', 'Please enter recipe name and ingredients to add a recipe')
+    } 
   }
 
   render() {
     return (
-      <Modal 
-        animationType='slide'
+      <Modal
+        animationType="slide"
         transparent={false}
         visible={this.props.modalVisible}
       >
-        <View style={{marginTop: 25}}>
-          <TouchableOpacity onPress={() => {
-            this.props.closeModal()
-          }}>
-            <Icon 
-              name='ios-backspace'
-              size={30}
-              style={styles.close}
-            />
-          </TouchableOpacity>
-          <Text style={styles.header}>Add a new recipe</Text>
-          <View style={styles.form}>
-            <View style={styles.inputContainer}>
-              <Text>Name: </Text>
-              <TextInput 
-              onChangeText={(text) => this.setState({ name: text})}
-              value={this.state.name}
-              style={styles.input}
+        <ScrollView>
+          <View style={styles.container}>
+            <TouchableOpacity>
+              <Feather
+                name="x-circle"
+                size={30}
+                style={styles.close}
+                onPress={() => this.props.closeModal()}
               />
+            </TouchableOpacity>
+            <Text style={styles.header}>Manually add a new recipe</Text>
+            <View style={styles.form}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.text}>Name:</Text>
+                <TextInput
+                  onChangeText={text => this.setState({ name: text })}
+                  style={styles.input}
+                  value={this.state.name}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.text}>Image url:</Text>
+                <TextInput
+                  onChangeText={text => this.setState({ imageUrl: text })}
+                  style={styles.input}
+                  value={this.state.imageUrl}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.text}>Ingredients:</Text>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                  <TextInput
+                    onChangeText={text => this.setState({ ingredients: text })}
+                    style={styles.multilineInput}
+                    multiline={true}
+                    placeholder="Please separate ingredients with commas"
+                    value={this.state.ingredients}
+                  />
+                </TouchableWithoutFeedback>
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.text}>Directions:</Text>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                  <TextInput
+                    onChangeText={text => this.setState({ directions: text })}
+                    style={styles.multilineInput}
+                    multiline={true}
+                    value={this.state.directions}
+                  />
+                </TouchableWithoutFeedback>
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.text}>Serving size:</Text>
+                <TextInput
+                  onChangeText={text => this.setState({ servingSize: text })}
+                  style={styles.input}
+                  value={this.state.servingSize}
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.text}>Calories:</Text>
+                <TextInput
+                  onChangeText={text => this.setState({ calories: text })}
+                  style={styles.input}
+                  value={this.state.calories}
+                />
+              </View>
+              <View style={styles.btnContainer} onPress={Keyboard.dismiss}>
+                <TouchableOpacity
+                  style={styles.userBtn}
+                  onPress={() =>
+                    this.addRecipe()}
+                >
+                  <Text style={styles.btnText}>Add Recipe</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-            <View style={styles.inputContainer}>
-              <Text>Image url:</Text>
-              <TextInput 
-                onChangeText={(text) => this.setState({ image: text})}
-                value={this.state.image}
-                style={styles.input}
-              />
-            </View> 
-            <View style={styles.inputContainer}>
-              <Text>Ingredients:</Text>
-              <TextInput 
-                onChangeText={(text) => this.setState({ ingredients: text})}
-                value={this.state.ingredients}
-                style={styles.input}
-              />
-            </View> 
-            <View style={styles.inputContainer}>
-              <Text>Directions:</Text>
-              <TextInput 
-                onChangeText={(text) => this.setState({ directions: text})}
-                value={this.state.directions}
-                style={styles.input}
-              />
-            </View> 
-            <View style={styles.inputContainer}>
-              <Text>Serving size:</Text>
-              <TextInput 
-                onChangeText={(text) => this.setState({ servingSize: text})}
-                value={this.state.servingSize}
-                style={styles.input}
-              />
-            </View> 
-            <View style={styles.inputContainer}>
-              <Text>Calories:</Text>
-              <TextInput 
-                onChangeText={(text) => this.setState({ calories: text})}
-                value={this.state.calories}
-                style={styles.input}
-              />
-            </View> 
-            <View style={styles.inputContainer}>
-              <Text>Tags:</Text>
-              <TextInput 
-                onChangeText={(text) => this.setState({ servingSize: text})}
-                value={this.state.servingSize}
-                style={styles.input}
-              />
-            </View> 
-            </View>
-        </View>
-        <Button title="Add Recipe" 
-          onPress={() => this.addRecipe()} 
-        />
+          </View>
+        </ScrollView>
       </Modal>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
     padding: 20,
+    height: 1100,
   },
   header: {
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 30
   },
   text: {
-    fontSize: 30,
+    fontSize: 14,
     marginBottom: 20,
+    width: 85,
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#dadada',
-    height: 25,
-    width: 250,
-    margin: 20
-  }, 
+    width: "70%",
+    backgroundColor: '#e6fcff',
+    height: 40,
+    padding: 10,
+    marginLeft: 10,
+  },
+  multilineInput: {
+    width: "70%",
+    backgroundColor: '#e6fcff',
+    height: 150,
+    padding: 10,
+    marginLeft: 10,
+  },
   form: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    width: '100%',
+    marginTop: 30,
   },
   close: {
-    textAlign: 'right',
-    margin: 20,
+    textAlign: "right",
+    margin: 20
   },
   inputContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    marginLeft: 40,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    margin: 15,
+  },
+  btnContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    marginTop: 30,
+    marginBottom: 20,
+  },
+  userBtn: {
+    backgroundColor: "#b0eff5",
+    padding: 15,
+    width: "75%",
+    display: "flex",
+    borderRadius: 7
+  },
+  btnText: {
+    fontSize: 20,
+    textAlign: "center",
+    color: "white"
   }
-})
+});

@@ -18,8 +18,9 @@ import {Recipes} from './components/Recipes'
 import LogoutScreen from './screens/LogoutScreen';
 import {AddButton} from './components/AddButton';
 import {FontAwesome5} from '@expo/vector-icons'
+import {RecipeForm} from './components/AddRecipeForm'
 
-import {RecipeScreen, GroceryScreen, FavoriteScreen, ProfileScreen} from './screens/index'
+import {RecipeScreen, GroceryScreen, FavoriteScreen, ProfileScreen, AddScreen} from './screens/index'
 
 export default class App extends Component {
   
@@ -47,9 +48,10 @@ const DashboardTabNavigator = createBottomTabNavigator(
     }
   },
   Add: { 
-    screen: () => null,
+    screen: AddScreen,
     navigationOptions: {
-      tabBarIcon: <AddButton />,
+      // tabBarIcon: <AddButton />
+      tabBarIcon: () => <FontAwesome5 name="plus" size={30} color="black" />,
     }
   },
   Grocery: { 
@@ -64,7 +66,7 @@ const DashboardTabNavigator = createBottomTabNavigator(
       tabBarIcon: () => <Icon name="ios-person" size={30} />
     
     }
-  }
+  },
 }, {
   tabBarOptions: {
     showLabel: false,
@@ -105,14 +107,8 @@ const AppSwitchNavigator = createSwitchNavigator({
   Welcome: {screen: WelcomeScreen},
   Login: {screen: LoginScreen},
   Signup: SignUpScreen,
-  Dashboard: AppDrawerNavigator
+  Dashboard: AppDrawerNavigator,
+  Add: AddScreen,
 })
 
 const AppContainer = createAppContainer(AppSwitchNavigator)
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-});

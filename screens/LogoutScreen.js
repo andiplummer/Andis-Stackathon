@@ -20,7 +20,8 @@ export default class LogoutScreen extends Component {
     super(props);
   }
 
-  signOut() {
+  async signOut() {
+    await firebase.auth().signOut()
     this.props.navigation.navigate('Welcome')
   }
 

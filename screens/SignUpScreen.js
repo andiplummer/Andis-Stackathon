@@ -30,10 +30,11 @@ export default class LoginScreen extends Component {
       const email = firebase.auth().currentUser.identifier;
       await FirebaseWrapper.GetInstance().CreateNewDocument(`users`, {
         id: userId,
-        email: this.state.email
+        email: this.state.email,
+        recipes: []
       });
       this.resetForm();
-      this.props.navigation.navigate('Login')
+      this.props.navigation.navigate('Dashboard')
     } catch (error) {
       console.log(error);
     }
