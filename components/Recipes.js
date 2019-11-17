@@ -1,47 +1,89 @@
-import React, { Component } from 'react'
-import {Text, 
-  View, 
-  StyleSheet, 
-  ScrollView, 
-  Modal, 
-  TextInput, 
+import React, { Component } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  Modal,
+  TextInput,
   Image,
-  TouchableHighlight, 
-  SafeAreaView, 
-  TouchableOpacity} 
-  from 'react-native'
-  import * as firebase from 'firebase'
+  TouchableHighlight,
+  SafeAreaView,
+  TouchableOpacity
+} from "react-native";
+import * as firebase from "firebase";
+import RecipeCard  from "./RecipeCard";
 
-  export class Recipes extends Component {
-  
-    constructor(props) {
-      super(props)
-      this.state = {
-        recipes: []
+export class Recipes extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      recipes: [],
+    };
+    this.getData = this.getData.bind(this);
+  }
+
+  componentDidMount() {
+    const userId = firebase.auth().currentUser.uid;
+    const ref = firebase
+      .database()
+      .ref()
+      .child(`/users/${userId}/recipes`);
+    ref.on("value", this.getData);
+    // this.setState({ loaded: true })
+  }
+
+  getData(data) {
+    if (!data.val()) {
+      console.log("no data");
+    } else {
+      let names = [];
+      const recipes = data.val();
+      // console.log('recipes', recipes)
+      const keys = Object.keys(recipes);
+      // console.log(keys)
+      for (let i = 0; i < keys.length; i++) {
+        let currentKey = keys[i];
+        names.push(recipes[currentKey].recipe);
       }
-    }
-
-    async getImageUrl() {
-      const userId = firebase.auth().currentUser.uid
-      const ref = firebase
-            .storage()
-            .ref()
-            .child(`userImages/${userId}`);
-      ref.getDownloadURL().then(function(url) {
-      return url
-      })
-    }
-
-    render() {
-      return (
-        <ScrollView style={styles.container}>
-        </ScrollView>
-      )
+      this.setState({
+        recipes: names
+      });
+      return names;
     }
   }
 
-  const styles = StyleSheet.create({
-    container: {
-      backgroundColor: '#e6fcff'
-    }
-  })
+  render() {
+    return (
+        this.state.recipes ? 
+        <ScrollView style={styles.container}>
+          <Text style={styles.welcome}>My Recipes</Text>
+          <View style={styles.recipeNameContainer}>
+            { this.state.recipes.map((recipe, index) => <RecipeCard key={index} recipe={recipe} />) }
+          </View>
+        </ScrollView>
+        : 
+        <ScrollView style={styles.container}>
+          <Text style={styles.welcome}>Loading recipes...</Text>
+        </ScrollView>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#c9f9ff",
+  },
+  welcome: {
+    textAlign: 'center',
+    fontSize: 30,
+    marginTop: 20,
+    marginBottom: 20,
+  },
+  recipeNameContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    width: '100%',
+  }
+});

@@ -33,6 +33,7 @@ export default class LoginScreen extends Component {
       this.resetForm();
       this.props.navigation.navigate('Dashboard')
     } catch (error) {
+      alert('Username or password incorrect')
       console.log(error);
     }
   }

@@ -27,7 +27,8 @@ export class RecipeForm extends React.Component {
       directions: "",
       calories: "",
       favorite: false,
-      servingSize: ""
+      servingSize: "",
+      favorite: false,
     };
   }
 
@@ -35,14 +36,7 @@ export class RecipeForm extends React.Component {
     if (this.state.name && this.state.ingredients) {
       const userId = firebase.auth().currentUser.uid
       await firebase.database().ref(`/users/${userId}/recipes`).push({
-        [this.state.name]: {
-          imageUrl: this.state.imageUrl,
-          ingredients: this.state.ingredients,
-          directions: this.state.directions,
-          calories: this.state.calories,
-          favorite: this.state.favorite,
-          servingSize: this.state.servingSize
-        }
+        recipe: this.state
       })
       this.setState({
         name: "",
@@ -53,6 +47,7 @@ export class RecipeForm extends React.Component {
         favorite: false,
         servingSize: "",
         imageUrl: "",
+        favorite: false,
       })
       Alert.alert('Recipe added!', 'View on Recipes page')
     } else {

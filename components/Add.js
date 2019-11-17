@@ -31,6 +31,7 @@ import {RecipeForm} from './AddRecipeForm'
         this.state = {
           recipeName: '',
           image: null,
+          favorite: false,
           modalVisible: false
         }
         this.uploadImageToFirebase = this.uploadImageToFirebase.bind(this)
@@ -108,8 +109,10 @@ import {RecipeForm} from './AddRecipeForm'
       const downloadUrl = await snapshot.ref.getDownloadURL();
       recipeName = this.state.recipeName
       await firebase.database().ref(`/users/${userId}/recipes`).push({
-        [recipeName]: {
+        recipe: {
+          name: recipeName,
           url: downloadUrl,
+          favorite: false
         }
       })
       this.setState({

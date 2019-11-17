@@ -10,8 +10,6 @@ import {
 } from 'react-native'
 import CategoryForm from './AddCategoryForm';
 import RecipeForm from './AddRecipeForm'
-import Icon from 'react-native-vector-icons/Ionicons';
-
 
 export class Header extends React.Component {
   constructor(props) {
