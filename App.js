@@ -25,6 +25,7 @@ import LogoutScreen from "./screens/LogoutScreen";
 import { AddButton } from "./components/AddButton";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import { RecipeForm } from "./components/AddRecipeForm";
+import {Profile} from './components/Profile'
 
 import {
   RecipeScreen,
@@ -73,12 +74,12 @@ const DashboardTabNavigator = createBottomTabNavigator(
         tabBarIcon: () => <Feather name="home" size={30} />
       }
     },
-    Favorites: {
-      screen: FavoriteScreen,
-      navigationOptions: {
-        tabBarIcon: () => <FontAwesome5 name="heart" size={30} color="black" />
-      }
-    },
+    // Favorites: {
+    //   screen: FavoriteScreen,
+    //   navigationOptions: {
+    //     tabBarIcon: () => <FontAwesome5 name="heart" size={30} color="black" />
+    //   }
+    // },
     Add: {
       screen: AddScreen,
       navigationOptions: {
@@ -86,17 +87,17 @@ const DashboardTabNavigator = createBottomTabNavigator(
         tabBarIcon: () => <FontAwesome5 name="plus" size={30} color="black" />
       }
     },
-    Grocery: {
-      screen: GroceryScreen,
-      navigationOptions: {
-        tabBarIcon: () => <Feather name="shopping-cart" size={30} />
-      }
-    },
+    // Grocery: {
+    //   screen: GroceryScreen,
+    //   navigationOptions: {
+    //     tabBarIcon: () => <Feather name="shopping-cart" size={30} />
+    //   }
+    // },
     Profile: {
-      screen: ProfileScreen,
+      screen: Profile,
       navigationOptions: {
-        tabBarIcon: () => <Feather name="user" size={30} />
-      }
+        tabBarIcon: <Feather name="user" size={30} />
+      },
     }
   },
   {

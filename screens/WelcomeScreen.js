@@ -30,9 +30,9 @@ export default class WelcomeScreen extends React.Component {
           <Text style={styles.btnText}>Sign Up</Text>
         </TouchableOpacity>
        </View>
-       <TouchableOpacity>
+       {/* <TouchableOpacity>
         <Text style={{fontSize: 16}} onPress={() => this.props.navigation.navigate('Dashboard')}>Continue as guest</Text>
-       </TouchableOpacity>
+       </TouchableOpacity> */}
       </View>
     )
   }

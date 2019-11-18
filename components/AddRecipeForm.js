@@ -14,7 +14,7 @@ import {
 import { TextInput, ScrollView } from "react-native-gesture-handler";
 import { FirebaseWrapper } from "../firebase/firebase";
 import Icon from "react-native-vector-icons/Ionicons";
-import { FontAwesome5, Feather } from "@expo/vector-icons";
+import { FontAwesome5, Feather, Ionicons } from "@expo/vector-icons";
 import * as firebase from 'firebase'
 
 export class RecipeForm extends React.Component {
@@ -35,9 +35,7 @@ export class RecipeForm extends React.Component {
   async addRecipe() {
     if (this.state.name && this.state.ingredients) {
       const userId = firebase.auth().currentUser.uid
-      await firebase.database().ref(`/users/${userId}/recipes`).push({
-        recipe: this.state
-      })
+      await firebase.database().ref(`/users/${userId}/recipes/${this.state.name}/recipe`).push(this.state)
       this.setState({
         name: "",
         imageUrl: "",
@@ -64,15 +62,14 @@ export class RecipeForm extends React.Component {
       >
         <ScrollView>
           <View style={styles.container}>
-            <TouchableOpacity>
-              <Feather
-                name="x-circle"
-                size={30}
+            <TouchableOpacity style={styles.backContainer} onPress={() => this.props.closeModal()}>
+              <Ionicons
+                name="md-arrow-round-back" size={30}
                 style={styles.close}
-                onPress={() => this.props.closeModal()}
               />
+              <Text style={{fontSize: 16}}>Snap a photo instead</Text>
             </TouchableOpacity>
-            <Text style={styles.header}>Manually add a new recipe</Text>
+            <Text style={styles.header}>Manually add a recipe</Text>
             <View style={styles.form}>
               <View style={styles.inputContainer}>
                 <Text style={styles.text}>Name:</Text>
@@ -82,14 +79,14 @@ export class RecipeForm extends React.Component {
                   value={this.state.name}
                 />
               </View>
-              <View style={styles.inputContainer}>
+              {/* <View style={styles.inputContainer}>
                 <Text style={styles.text}>Image url:</Text>
                 <TextInput
                   onChangeText={text => this.setState({ imageUrl: text })}
                   style={styles.input}
                   value={this.state.imageUrl}
                 />
-              </View>
+              </View> */}
               <View style={styles.inputContainer}>
                 <Text style={styles.text}>Ingredients:</Text>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -150,26 +147,33 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     height: 1100,
+    backgroundColor: "#c9f9ff"
   },
   header: {
     textAlign: "center",
-    fontSize: 30
+    fontSize: 30,
+    marginTop: 10,
   },
   text: {
     fontSize: 14,
     marginBottom: 20,
-    width: 85,
+    width: 80,
+  },
+  backContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   input: {
     width: "70%",
-    backgroundColor: '#e6fcff',
+    backgroundColor: 'white',
     height: 40,
     padding: 10,
     marginLeft: 10,
   },
   multilineInput: {
     width: "70%",
-    backgroundColor: '#e6fcff',
+    backgroundColor: 'white',
     height: 150,
     padding: 10,
     marginLeft: 10,
@@ -182,7 +186,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
   },
   close: {
-    textAlign: "right",
+    textAlign: "left",
     margin: 20
   },
   inputContainer: {
@@ -200,7 +204,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   userBtn: {
-    backgroundColor: "#b0eff5",
+    backgroundColor: "white",
     padding: 15,
     width: "75%",
     display: "flex",
@@ -209,6 +213,6 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 20,
     textAlign: "center",
-    color: "white"
+    color: "black"
   }
 });

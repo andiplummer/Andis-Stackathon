@@ -33,6 +33,7 @@ import {Text,
           modalVisible: false,
         }
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleRemovePhoto = this.handleRemovePhoto.bind(this)
     }
 
     closeModal() {
@@ -43,7 +44,7 @@ import {Text,
       if (Constants.platform.ios) {
         const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
         if (status !== 'granted') {
-          alert('Please enable camera roll access to upload photos')
+          Alert.alert('Oops!', 'Please enable camera roll access to upload photos')
         }
       }
     }
@@ -52,7 +53,7 @@ import {Text,
       if (Constants.platform.ios) {
         const { status } = await Permissions.askAsync(Permissions.CAMERA)
         if (status !== 'granted') {
-          alert('Please enable camera access to take photos')
+          Alert.alert('Oops!', 'Please enable camera access to take photos')
         }
       }
     }
@@ -92,7 +93,18 @@ import {Text,
       })
     }
 
+    handleRemovePhoto() {
+      this.setState({
+        images: [],
+        name: ''
+      })
+      console.log('state', this.state)
+    }
+
     async handleSubmit() {
+      if (!this.state.name || !this.state.images) {
+        Alert.alert('Oops!', 'Please enter a recipe name and snap a photo to add a recipe')
+      } else {
       const userId = firebase.auth().currentUser.uid
       const recipeName = this.state.name
       if (!this.state.images) {
@@ -117,7 +129,7 @@ import {Text,
           const downloadUrl = await snapshot.ref.getDownloadURL();
           
           // Adding images to database as download url 
-          await firebase.database().ref(`/users/${userId}/recipes/${recipeName}`).push({
+          await firebase.database().ref(`/users/${userId}/recipes/${recipeName}/images`).push({
             url: downloadUrl,
             favorite: image.favorite
           })
@@ -128,10 +140,12 @@ import {Text,
         })
         }
       Alert.alert('Success!', 'Recipe added :)')
+      }
     }
 
     render() {
       return (
+        <View>
         <ScrollView>
         <View style={styles.container}>
           <Text style={styles.addText }>Add a new recipe</Text>
@@ -139,15 +153,35 @@ import {Text,
             <TextInput placeholder="Recipe name" style={styles.input} value={this.state.name} onChangeText={(text) => this.setState({ name: text })} />
           </TouchableWithoutFeedback>
           <View style={styles.icons}>
-            <TouchableOpacity onPress={() => this.state.name ? this.selectImage() : alert('Please enter a recipe name before uploading a photo')}>
+            <TouchableOpacity onPress={() => this.state.name ? this.selectImage() : Alert.alert('Oops!', 'Please enter a recipe name before uploading a photo')}>
               <Feather name="upload" color="black" size={80} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.state.name ? this.takePicture() : alert('Please enter a recipe name before taking a photo')}>
+            <TouchableOpacity onPress={() => this.state.name ? this.takePicture() : Alert.alert('Oops!', 'Please enter a recipe name before taking a photo')}>
               <Feather name="camera" color="black" size={80} />
             </TouchableOpacity>
             <TouchableOpacity onPress={()=> this.setState({ modalVisible: true })}>
               <Feather name="edit" color="black" size={80} />
             </TouchableOpacity>
+          </View>
+          <View>
+            {
+              !this.state.images[0] ? null : 
+                 <TouchableOpacity onPress={() => (this.handleRemovePhoto())}>
+                  <Text style={{fontSize: 24, textAlign: 'center'}} >Clear selected photos</Text>
+                </TouchableOpacity>
+             
+            }
+         
+            { this.state.images ?
+              this.state.images.map((image, index) => {
+                  return (
+                    <View key={index}>
+                      <Image style={styles.img} key={index} source={{ uri: image.url }} />
+                      {/* <AntDesign key={index} name="delete" size={24} onPress={() => this.removePhoto(index)} /> */}
+                    </View>
+                  )
+            }) : <Text>No photos selected</Text>
+          }
           </View>
           <View style={styles.btnContainer}>
             <TouchableOpacity
@@ -157,18 +191,11 @@ import {Text,
               <Text style={styles.btnText}>Add Recipe</Text>
             </TouchableOpacity>
           </View>
-            { this.state.images ?
-              this.state.images.map((image, index) => {
-                // <View>
-                //   <Text style={styles.imageContainer}>Selected Images</Text>
-                  <Image source={{ uri: image.url }} /> 
-                  {/* <AntDesign name="delete" size={24} onPress={() => this.removePhoto(index)} /> */}
-                // </View>
-            }) : null
-          }
+            
           <RecipeForm modalVisible={this.state.modalVisible} closeModal={() => this.closeModal()} />
         </View>
         </ScrollView>
+        </View>
       )
     }
   }
@@ -176,11 +203,11 @@ import {Text,
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#e6fcff',
+      backgroundColor: "#c9f9ff",
       flexDirection: 'column',
       alignItems: 'center',
-      height: 700,
-      paddingTop: 125,
+      height: 2000,
+      paddingTop: 30,
     }, 
     addText: {
       textAlign: 'center',
@@ -210,13 +237,18 @@ import {Text,
       height: 300,
       marginTop: 30,
     },
+    selected: {
+      fontSize: 24,
+      marginTop: 40,
+    },
     btnContainer: {
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
+      marginTop: 20,
     },
     userBtn: {
-      backgroundColor: "#b0eff5",
+      backgroundColor: "white",
       padding: 15,
       width: "75%",
       display: "flex",
@@ -225,6 +257,6 @@ import {Text,
     btnText: {
       fontSize: 20,
       textAlign: "center",
-      color: 'white',
+      color: 'black',
     }
   })

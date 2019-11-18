@@ -39,12 +39,13 @@ export class Recipes extends Component {
     } else {
       let names = [];
       const recipes = data.val();
-      // console.log('recipes', recipes)
       const keys = Object.keys(recipes);
-      // console.log(keys)
       for (let i = 0; i < keys.length; i++) {
         let currentKey = keys[i];
-        names.push(recipes[currentKey].recipe);
+        let obj = {
+          [currentKey]: recipes[currentKey]
+        }
+        names.push(obj);
       }
       this.setState({
         recipes: names
@@ -59,7 +60,7 @@ export class Recipes extends Component {
         <ScrollView style={styles.container}>
           <Text style={styles.welcome}>My Recipes</Text>
           <View style={styles.recipeNameContainer}>
-            {/* { this.state.recipes.map((recipe, index) => <RecipeCard key={index} recipe={recipe} />) } */}
+            { this.state.recipes.map((recipe, index) => <RecipeCard key={index} recipe={recipe} />) }
           </View>
         </ScrollView>
         : 
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
   welcome: {
     textAlign: 'center',
     fontSize: 30,
-    marginTop: 20,
+    marginTop: 30,
     marginBottom: 20,
   },
   recipeNameContainer: {

@@ -22,7 +22,6 @@ class RecipeCard extends React.Component {
   }
 
   handleFavorite() {
-    console.log("CLicked!!");
     if (this.state.favorite === false) {
       this.setState = {
         favorite: false,
@@ -38,16 +37,20 @@ class RecipeCard extends React.Component {
   }
 
   render() {
+    console.log('recipe card props', this.props.recipe)
+    const recipeName = Object.keys(this.props.recipe)[0]
     return (
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
             this.props.navigation.navigate("Recipe", {
-              recipe: this.props.recipe
+              recipe: this.props.recipe[recipeName].recipe,
+              recipeName: recipeName,
+              images: this.props.recipe[recipeName].images
             });
           }}
         >
-          <Text style={styles.text}>{this.props.recipe.name}</Text>
+          <Text style={styles.text}>{recipeName}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.handleFavorite}>
           <Feather
